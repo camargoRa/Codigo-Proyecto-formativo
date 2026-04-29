@@ -20,5 +20,4 @@ const NavbarMaquinas = () => {
     </>
   )
 }
-
 export default NavbarMaquinas
