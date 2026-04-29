@@ -1,16 +1,23 @@
-import axios from "axios";
+import axios from "axios"
 
-//OBTENER TALLERES
-export const getUsers = async (state) =>{
-    try{
-    const peticion = await axios.get('http://localhost:5000/users')
-    state(peticion.data)
+const API = import.meta.env.VITE_API_URL
+
+// OBTENER USUARIOS
+export const getUsers = async (state) => {
+    try {
+        const peticion = await axios.get(`${API}/users`)
+        state(peticion.data)
     } catch (error) {
-        console.error('Error fetching users:', error);
+        console.error("Error al obtener usuarios:", error)
     }
 }
-//OBTENER MAQUINAS
-// export const ObtenerMaquinas = async ()=>{
-//     const peticion = await Axios.get('http://localhost:5000/maquinas')
-//     console.log(peticion)
-// }
+
+// OBTENER MAQUINAS
+export const getMachines = async (state) => {
+    try {
+        const peticion = await axios.get(`${API}/machines`)
+        state(peticion.data)
+    } catch (error) {
+        console.error("Error al obtener maquinas:", error)
+    }
+}
