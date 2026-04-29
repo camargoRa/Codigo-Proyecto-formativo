@@ -33,7 +33,7 @@ const Navbarinic = () =>{
                             <button type="button" data-bs-toggle="modal" data-bs-target="#primermodal" style = {{borderRadius: '12px', padding: '5px'}}>Inicio de Sesion</button>{/*BOTON PARA ABRIR VENTANA MODAL*/} 
 
                             {/*ABRE PRIMER MODAL*/} 
-                              <div className="modal fade" id="primermodal" tabindex="-1"  aria-labelledby="exampleModalLabel" aria-hidden="true">
+                              <div className="modal fade" id="primermodal" tabIndex="-1"  aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div className="modal-dialog modal-dialog-centered">
                                   <div className="modal-content" style={{border: 'Solid'}}>
                                     <div className="modal-header">
