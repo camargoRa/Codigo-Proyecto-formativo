@@ -1,6 +1,8 @@
-import app from "./app";
-import './database/db.js'
+import app from './app.js'
+import { connectDB } from './config.js'
 
-app.listen(app.get('port'))
+connectDB()
 
-console.log('corriendo en el puerto ', app.get('port'))
+app.listen(app.get('port'), () => {
+    console.log('Server on port', app.get('port'))
+});

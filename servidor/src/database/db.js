@@ -1,21 +1,14 @@
-import sql, { query } from 'mssql'
+import mongoose from "mongoose";
 
 const dbconfig = {
-    user: 'sebas',
-    password: '1234',
-    server:  'localhost',
-    database: 'solctext',
-    options: {    
-        encrypt: true,
-        trustServerCertificate: true,
-    },
-};
-export async function getConnection(){
+    url: 'mongodb://localhost:27017/solctext',
+}
+export async function connectDB() {
     try {
-        const pool = await sql.connect(dbconfig)
-        return pool;
+        await mongoose.connect(dbconfig.url);
+        console.log('Connected to MongoDB');
     } catch (error) {
-        console.error(error)
+        console.error('Error connecting to MongoDB:', error);
     }
-};
-export { sql }
+}
+export default mongoose;

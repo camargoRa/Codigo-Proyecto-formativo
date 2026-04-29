@@ -1,97 +1,74 @@
-import {getConnection,sql,queries} from '../database'
+import User from '../models/User.js'
+import Machine from '../models/Machine.js'
 
-//CONTROLADORES DE TALLERES
-// GET de talleres 
+// GET todos los usuarios
 export const getUsers = async (req, res) => {
     try {
-        const pool = await getConnection()
-        const result = await pool
-        .request()
-        .query(queries.getUsers);
-        res.json(result.recordset) 
+        const users = await User.find()
+        res.json(users)
     } catch (error) {
-        res.status(500);
-        res.send(error.message)
+        res.status(500).send(error.message)
     }
+}
 
-};
-//POST de talleres
+// POST crear usuario
 export const addUsers = async (req, res) => {
-
     const { name_entity, rut, u_address, email, Phone_number, user_type } = req.body
-    if (name_entity == null || rut == null || u_address == null ) {
-        return res.status(400).json({msg: "petición erronea, por favor llena todos los campos"})
-    }
-    try {
-    const pool = await getConnection();
-    const result = await pool
-    .request()
-    .input("name_entity", sql.VarChar, name_entity)
-    .input("rut", sql.VarChar, rut)
-    .input("u_address", sql.VarChar, u_address)
-    .input("email", sql.VarChar, email)
-    .input("Phone_number", sql.VarChar, Phone_number)
-    .input("user_type", sql.VarChar, user_type)
-    .query(queries.addUsers);
-    res.json({name_entity, rut, u_address, email, Phone_number,user_type})
-    } catch (error) {
-        res.status(500);
-    }
-};
-// GET BY ID de talleres
-export const getUsersById = async  (req,res) => {
-    const {id} = req.params
-    const pool = await getConnection()
-    const result = await pool.request()
-    .input('id', id)
-    .query(queries.getUsersById)
-    res.send(result.recordset)
 
-}
-//DELETE BY ID de talleres
-export const deleteUsersById = async  (req,res) => {
-    try {
-        const {id} = req.params
-        const pool = await getConnection()
-        const result = await pool
-        .request()
-        .input('id', id)
-        .query(queries.deleteUsersById)
-        res.send(result)
-    } catch (error) {
-        res.sendStatus(204)
-    }
-}
-//UPDATE BY ID de talleres
-export const updateUserById = async (req,res) => {
-    const {name_entity, rut, u_address, email, Phone_number, user_type} = req.body
-    const {id} = req.params
-    try {
-        const pool = await getConnection()
-        const result = await pool
-        .request()
-        .input('id', id)
-        .input("name_entity", sql.VarChar, name_entity)
-        .input("rut", sql.VarChar, rut)
-        .input("u_address", sql.VarChar, u_address)
-        .input("email", sql.VarChar, email)
-        .input("Phone_number", sql.VarChar, Phone_number)
-        .input("user_type", sql.VarChar, user_type)
-        .query(queries.updateUserById);
-        res.json({name_entity, rut, u_address, email, Phone_number, user_type})
-    } catch (error) {
-        res.send(error.message)
-        res.sendStatus(500)
+    if (!name_entity || !rut || !u_address) {
+        return res.status(400).json({ msg: "Por favor llena todos los campos obligatorios" })
     }
 
+    try {
+        const newUser = new User({ name_entity, rut, u_address, email, Phone_number, user_type })
+        await newUser.save()
+        res.json(newUser)
+    } catch (error) {
+        res.status(500).send(error.message)
+    }
 }
 
-//CONTROLADORES DE MAQUINAS
-//GET de maquinas
-export const getMachines = async (req,res) => {
-    const pool = await getConnection()
-    const result = await pool
-    .request()
-    .query(queries.getMachines)
-    res.send(result.recordset)
+// GET usuario por ID
+export const getUsersById = async (req, res) => {
+    try {
+        const user = await User.findById(req.params.id)
+        if (!user) return res.status(404).json({ msg: "Usuario no encontrado" })
+        res.json(user)
+    } catch (error) {
+        res.status(500).send(error.message)
+    }
+}
+
+// DELETE usuario por ID
+export const deleteUsersById = async (req, res) => {
+    try {
+        await User.findByIdAndDelete(req.params.id)
+        res.json({ msg: "Usuario eliminado" })
+    } catch (error) {
+        res.status(500).send(error.message)
+    }
+}
+
+// PUT actualizar usuario por ID
+export const updateUserById = async (req, res) => {
+    try {
+        const updated = await User.findByIdAndUpdate(
+            req.params.id,
+            req.body,
+            { new: true }
+        )
+        res.json(updated)
+    } catch (error) {
+        res.status(500).send(error.message)
+    }
+}
+
+// GET todas las máquinas
+export const getMachines = async (req, res) => {
+    try {
+        const machines = await Machine.find()
+        res.json(machines)
+    } catch (error) {
+        res.status(500).send(error.message)
+    }
 }
